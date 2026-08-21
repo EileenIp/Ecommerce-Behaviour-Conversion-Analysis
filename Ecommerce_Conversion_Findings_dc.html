@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Commerce Conversion Analysis — Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-bg: oklch(98% 0.006 255);
+    --color-text: oklch(20% 0.02 255);
+    --color-divider: oklch(88% 0.012 255);
+    --color-neutral-200: oklch(94% 0.006 255);
+    --color-neutral-600: oklch(55% 0.02 255);
+    --color-neutral-700: oklch(45% 0.02 255);
+    --color-accent: oklch(40% 0.13 258);
+    --color-accent-100: oklch(93% 0.025 258);
+    --color-accent-200: oklch(87% 0.045 258);
+    --color-accent-300: oklch(75% 0.09 258);
+    --color-accent-400: oklch(65% 0.11 258);
+    --color-accent-500: oklch(55% 0.125 258);
+    --color-accent-700: oklch(40% 0.13 258);
+    --color-accent-800: oklch(28% 0.11 258);
+    --color-accent-900: oklch(16% 0.055 258);
+    --font-heading: 'IBM Plex Sans', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #12181f; font-family: var(--font-body); overflow: hidden; }
+  .blueprint { position: relative; border: 1px solid var(--color-divider); }
+  .corner { position: absolute; width: 18px; height: 18px; pointer-events: none; }
+  .corner.tl { top: -1px; left: -1px; border-top: 2px solid var(--color-accent-400); border-left: 2px solid var(--color-accent-400); }
+  .corner.tr { top: -1px; right: -1px; border-top: 2px solid var(--color-accent-400); border-right: 2px solid var(--color-accent-400); }
+  .corner.bl { bottom: -1px; left: -1px; border-bottom: 2px solid var(--color-accent-400); border-left: 2px solid var(--color-accent-400); }
+  .corner.br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--color-accent-400); border-right: 2px solid var(--color-accent-400); }
+
+  #deck-viewport { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; }
+  #deck-stage { width: 1920px; height: 1080px; position: relative; transform-origin: center center; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+  #deck-stage > section { position: absolute; top: 0; left: 0; }
+
+  #deck-bar { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 14px; background: rgba(18,24,31,0.88); backdrop-filter: blur(6px); padding: 10px 16px; border-radius: 30px; z-index: 10; box-shadow: 0 6px 24px rgba(0,0,0,0.35); }
+  .deck-btn { all: unset; cursor: pointer; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.08); color: #eef2f6; display: flex; align-items: center; justify-content: center; font-size: 18px; font-family: var(--font-heading); transition: background .15s; }
+  .deck-btn:hover { background: rgba(255,255,255,0.18); }
+  .deck-btn:disabled { opacity: 0.3; cursor: default; }
+  .deck-btn:disabled:hover { background: rgba(255,255,255,0.08); }
+  #deck-counter { color: #cfd8e3; font-family: var(--font-heading); font-size: 13px; min-width: 56px; text-align: center; letter-spacing: 0.03em; }
+  #deck-notes-toggle { all: unset; cursor: pointer; font-family: var(--font-heading); font-size: 12px; letter-spacing: 0.05em; color: #cfd8e3; padding: 0 10px; border-left: 1px solid rgba(255,255,255,0.15); margin-left: 4px; padding-left: 14px; }
+  #deck-notes-toggle:hover { color: #fff; }
+  #deck-notes { position: fixed; bottom: 78px; left: 50%; transform: translateX(-50%); max-width: 760px; width: 90vw; background: #fff; color: #24303c; padding: 18px 22px; border-radius: 10px; font-size: 14.5px; line-height: 1.55; box-shadow: 0 12px 40px rgba(0,0,0,0.4); display: none; z-index: 10; }
+  #deck-notes .notes-label { font-family: var(--font-heading); font-size: 11px; letter-spacing: 0.08em; color: var(--color-accent-700); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div id="deck-viewport">
+  <div id="deck-stage">
+
+<section data-label="Title" data-speaker-notes="Thanks everyone for making time. Over the last two months we pulled the full clickstream from the e-commerce site — about 110 million raw events — and ran it through a conversion analysis. The goal was simple: figure out why some shoppers buy and most don't, and give each of you, Product, CX, and Marketing, something concrete to act on. I'll walk through the funnel, timing, product mix, checkout behavior, shopper segments, and then close with recommendations and next steps." style="width:1920px;height:1080px;background:var(--color-accent-900);display:flex;flex-direction:column;justify-content:center;padding:160px;box-sizing:border-box;font-family:var(--font-body);position:relative;">
+  <div style="position:absolute;top:80px;left:160px;font-family:var(--font-heading);font-size:20px;letter-spacing:0.14em;color:var(--color-accent-300);font-weight:600;">E-COMMERCE CONVERSION ANALYSIS</div>
+  <h1 style="font-family:var(--font-heading);font-size:108px;line-height:1.04;color:var(--color-bg);font-weight:600;margin:0 0 40px 0;max-width:1560px;">Why Do Some Shoppers Buy — And Others Don't?</h1>
+  <p style="font-size:32px;color:var(--color-accent-300);margin:0;max-width:1200px;font-weight:400;">Two months of full clickstream data — roughly 110 million events — analyzed to find what actually separates buyers from browsers.</p>
+  <div style="position:absolute;bottom:100px;left:160px;width:140px;height:2px;background:var(--color-accent-400);"></div>
+</section>
+
+<section data-label="Core Finding" data-speaker-notes="Here is the headline. Of everyone who viewed a product, only 2.1% added something to their cart, and 1.8% of all visitors actually purchased. But look at the conversion once someone adds to cart: 83% of them buy. That number should reframe how we think about this problem. The checkout itself is not the leak. The leak is far upstream — getting someone to add to cart in the first place. Everything I show after this slide is in service of that one insight." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">01 — THE CORE FUNNEL</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 60px 0;">Where shoppers actually drop off</h2>
+  <div style="display:flex;flex:1;gap:100px;align-items:center;">
+    <div class="blueprint" style="flex-shrink:0;width:760px;padding:56px 48px;display:flex;flex-direction:column;gap:34px;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-family:var(--font-heading);font-size:26px;font-weight:600;color:var(--color-text);">View</span><span style="font-family:var(--font-heading);font-size:32px;font-weight:600;color:var(--color-accent-700);">96.1%</span></div>
+        <div style="width:100%;height:36px;border:1px solid var(--color-divider);"><div style="width:100%;height:100%;background:var(--color-accent-200);"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-family:var(--font-heading);font-size:26px;font-weight:600;color:var(--color-text);">Cart</span><span style="font-family:var(--font-heading);font-size:32px;font-weight:600;color:var(--color-accent-700);">2.1%</span></div>
+        <div style="width:100%;height:36px;border:1px solid var(--color-divider);"><div style="width:44%;height:100%;background:var(--color-accent-500);"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-family:var(--font-heading);font-size:26px;font-weight:600;color:var(--color-text);">Purchase</span><span style="font-family:var(--font-heading);font-size:32px;font-weight:600;color:var(--color-accent-700);">1.8%</span></div>
+        <div style="width:100%;height:36px;border:1px solid var(--color-divider);"><div style="width:37%;height:100%;background:var(--color-accent-700);"></div></div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:36px;">
+      <div class="blueprint" style="padding:48px;">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <div style="font-family:var(--font-heading);font-size:130px;font-weight:600;color:var(--color-accent-700);line-height:1;">83%</div>
+        <div style="font-size:30px;color:var(--color-text);margin-top:20px;line-height:1.4;font-weight:400;">of shoppers who add to cart go on to buy.</div>
+      </div>
+      <div style="font-size:32px;color:var(--color-text);line-height:1.5;font-weight:400;">The real leak is upstream — getting people to add to cart at all, not the checkout flow itself.</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Timing" data-speaker-notes="We looked at when people buy, not just who. The swing by hour of day is dramatic: purchase rate bottoms out at 0.96% right at midnight UTC and peaks at 2.35% around 9am UTC — a 2.4x difference. Day of week matters far less: Monday is actually the best day at 1.81%, and Tuesday is the worst at 1.68%, even though Tuesday gets the most traffic. So for Marketing, the recommendation is to stop optimizing sends by day of week and instead concentrate promo and retargeting sends in that 7 to 10am UTC window." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">02 — TIMING</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 50px 0;">Time of day matters more than day of week</h2>
+  <div style="display:flex;flex:1;gap:90px;">
+    <div style="flex:1.1;display:flex;flex-direction:column;justify-content:center;gap:40px;">
+      <div style="display:flex;align-items:flex-end;gap:56px;height:380px;">
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+          <div style="font-family:var(--font-heading);font-size:44px;font-weight:600;color:var(--color-neutral-600);margin-bottom:14px;">0.96%</div>
+          <div style="width:140px;height:140px;border:1px solid var(--color-divider);background:var(--color-neutral-200);"></div>
+          <div style="font-size:24px;color:var(--color-neutral-700);margin-top:16px;font-weight:400;">Midnight UTC</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+          <div style="font-family:var(--font-heading);font-size:44px;font-weight:600;color:var(--color-accent-700);margin-bottom:14px;">2.35%</div>
+          <div style="width:140px;height:340px;border:1px solid var(--color-divider);background:var(--color-accent-500);"></div>
+          <div style="font-size:24px;color:var(--color-neutral-700);margin-top:16px;font-weight:400;">9am UTC</div>
+        </div>
+      </div>
+      <div style="font-family:var(--font-heading);font-size:30px;color:var(--color-text);font-weight:600;">2.4x swing across the day</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:28px;">
+      <div style="display:flex;align-items:center;gap:24px;">
+        <div style="width:56px;height:56px;border:1px solid var(--color-accent);background:var(--color-accent-100);color:var(--color-accent-800);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:26px;font-weight:600;flex-shrink:0;">M</div>
+        <div style="font-size:30px;color:var(--color-text);font-weight:600;">Monday — best day, 1.81%</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;">
+        <div style="width:56px;height:56px;border:1px solid var(--color-divider);color:var(--color-neutral-700);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:26px;font-weight:600;flex-shrink:0;">T</div>
+        <div style="font-size:30px;color:var(--color-text);font-weight:600;">Tuesday — worst day, 1.68%, despite most traffic</div>
+      </div>
+      <div class="blueprint" style="margin-top:20px;padding:36px;font-size:28px;color:var(--color-text);line-height:1.5;font-weight:400;">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <strong style="font-family:var(--font-heading);color:var(--color-accent-700);font-weight:600;">Marketing:</strong> shift promo &amp; retargeting sends toward the 7–10am UTC window, not by day of week.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Product Mix" data-speaker-notes="Smartphones punch way above their weight. They're 27% of all browsing, but 45.5% of purchases, at a conversion rate of 2.94% — that's 1.7 times the site average. And when you zoom into brands, Samsung, Apple, and Xiaomi together account for half of all purchases. For Marketing and Product, the takeaway is straightforward: protect smartphone inventory and feature these three brands prominently, because they're simultaneously the biggest traffic driver and the most efficient converter." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">03 — PRODUCT MIX</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 50px 0;">Smartphones drive traffic and convert best</h2>
+  <div style="display:flex;flex:1;gap:90px;">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:34px;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:26px;font-weight:600;color:var(--color-neutral-700);"><span>Share of browsing</span><span>27%</span></div>
+        <div style="width:100%;height:40px;border:1px solid var(--color-divider);"><div style="width:27%;height:100%;background:var(--color-accent-200);"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:26px;font-weight:600;color:var(--color-neutral-700);"><span>Share of purchases</span><span>45.5%</span></div>
+        <div style="width:100%;height:40px;border:1px solid var(--color-divider);"><div style="width:45.5%;height:100%;background:var(--color-accent-500);"></div></div>
+      </div>
+      <div class="blueprint" style="padding:36px;display:flex;align-items:baseline;gap:20px;margin-top:10px;">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <div style="font-family:var(--font-heading);font-size:84px;font-weight:600;color:var(--color-accent-700);line-height:1;">2.94%</div>
+        <div style="font-size:26px;color:var(--color-text);font-weight:400;">conversion rate — 1.7x the site average</div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:36px;">
+      <div style="font-family:var(--font-heading);font-size:30px;color:var(--color-text);font-weight:600;">Half of all purchases come from 3 brands:</div>
+      <div style="display:flex;gap:24px;">
+        <div style="flex:1;border:1px solid var(--color-accent);padding:32px 20px;text-align:center;font-family:var(--font-heading);font-size:26px;font-weight:600;color:var(--color-accent-800);">Samsung</div>
+        <div style="flex:1;border:1px solid var(--color-accent);padding:32px 20px;text-align:center;font-family:var(--font-heading);font-size:26px;font-weight:600;color:var(--color-accent-800);">Apple</div>
+        <div style="flex:1;border:1px solid var(--color-accent);padding:32px 20px;text-align:center;font-family:var(--font-heading);font-size:26px;font-weight:600;color:var(--color-accent-800);">Xiaomi</div>
+      </div>
+      <div style="font-size:26px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;"><strong style="font-family:var(--font-heading);color:var(--color-accent-700);font-weight:600;">Marketing / Product:</strong> protect &amp; feature smartphone inventory and these three brands prominently.</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Checkout Signal" data-speaker-notes="Here's a subtler one, in the cart itself. On average, shoppers add items worth $187 to their cart — but the items they actually end up purchasing average $170. That's a mild trading-down moment happening right before payment, likely someone comparing a cheaper option at the last second. For Product, this suggests testing a cheaper in-category alternative surfaced directly at the cart stage, rather than losing that shopper to a competitor or abandoning altogether." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">04 — CHECKOUT</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 60px 0;">A quiet "trading down" before payment</h2>
+  <div style="display:flex;flex:1;align-items:center;gap:80px;">
+    <div style="display:flex;align-items:center;gap:56px;">
+      <div style="text-align:center;">
+        <div style="font-family:var(--font-heading);font-size:130px;font-weight:600;color:var(--color-neutral-600);line-height:1;">$187</div>
+        <div style="font-size:28px;color:var(--color-neutral-700);margin-top:20px;font-weight:400;">average cart value</div>
+      </div>
+      <svg width="90" height="90" viewBox="0 0 90 90"><path d="M20 40 L70 40 L70 20 L90 45 L70 70 L70 50 L20 50 Z" style="fill:var(--color-accent);"></path></svg>
+      <div style="text-align:center;">
+        <div style="font-family:var(--font-heading);font-size:130px;font-weight:600;color:var(--color-accent-700);line-height:1;">$170</div>
+        <div style="font-size:28px;color:var(--color-neutral-700);margin-top:20px;font-weight:400;">average purchase value</div>
+      </div>
+    </div>
+    <div class="blueprint" style="flex:1;padding:48px;font-size:32px;color:var(--color-text);line-height:1.5;font-weight:400;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <strong style="font-family:var(--font-heading);color:var(--color-accent-700);font-weight:600;">Product:</strong> test showing a cheaper in-category alternative right at the cart stage.
+    </div>
+  </div>
+</section>
+
+<section data-label="Cart Conversion" data-speaker-notes="Here's the core finding. We built a tool that looks at how a shopper is browsing — how long they've spent, how much they've added to cart, how many pages they've looked at — and uses that to flag which carts are most likely to turn into a sale. Just over half, 50.9%, of the 573,000 cart-containing October sessions went on to purchase. Our tool clearly separates the likely buyers from the likely walk-aways, on average — but about 1 in 5 abandoned carts still look just as promising as a completed purchase. So think of this as a prioritization tool for who to follow up with first, not a guarantee of who will or won't buy." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">05 — CART-TO-PURCHASE CONVERSION</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 44px 0;">Just over half of carts convert — and we can tell you which ones are most likely to</h2>
+  <div style="display:flex;flex:1;gap:70px;">
+    <div class="blueprint" style="flex:1;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:20px;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div style="font-family:var(--font-heading);font-size:104px;font-weight:600;color:var(--color-accent-700);line-height:1;">50.9%</div>
+      <div style="font-size:28px;color:var(--color-text);font-weight:400;">of the 573,000 October shoppers who added something to cart went on to buy it.</div>
+    </div>
+    <div class="blueprint" style="flex:1;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:20px;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div style="font-family:var(--font-heading);font-size:104px;font-weight:600;color:var(--color-accent-700);line-height:1;">1 in 5</div>
+      <div style="font-size:28px;color:var(--color-text);font-weight:400;">abandoned carts look just as promising as one that converted — worth a second chance, not a lost cause.</div>
+    </div>
+  </div>
+  <div style="font-size:28px;color:var(--color-neutral-700);font-weight:400;margin-top:44px;"><strong style="font-family:var(--font-heading);color:var(--color-accent-700);font-weight:600;">Why this works:</strong> it's driven almost entirely by how much someone shops — time spent, items carted — not by what specific products they looked at.</div>
+</section>
+
+<section data-label="What Predicts a Purchase" data-speaker-notes="A natural question is what to actually change on the site, since 'browse longer' isn't something we can design for directly. So we asked: if we ignore how long someone shops and how much they cart, and look only at what they're browsing, do we still learn something useful? Yes — noticeably weaker, but still genuinely useful. How many pages someone viewed, the price range they were browsing, and how many different brands they looked at all still carry real signal. That's the more actionable version of this question for Product, since 'get people to browse longer' isn't a real lever, but 'make brand comparison easier' is." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">06 — WHAT PREDICTS A PURCHASE, BEYOND ENGAGEMENT</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 60px 0;">Set aside "how much" someone shops — what's left still matters</h2>
+  <div style="display:flex;flex:1;align-items:center;gap:100px;">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;">
+      <div style="width:100%;height:64px;background:var(--color-accent-700);display:flex;align-items:center;justify-content:center;">
+        <span style="font-family:var(--font-heading);font-size:26px;font-weight:600;color:white;">Strong signal</span>
+      </div>
+      <div style="font-family:var(--font-heading);font-size:30px;font-weight:600;color:var(--color-text);">Time spent + items carted</div>
+      <div style="font-family:var(--font-heading);font-size:20px;color:var(--color-neutral-600);font-weight:600;">included</div>
+    </div>
+    <div style="width:1px;height:220px;background:var(--color-divider);"></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;">
+      <div style="width:78%;height:64px;background:var(--color-neutral-600);display:flex;align-items:center;justify-content:center;">
+        <span style="font-family:var(--font-heading);font-size:26px;font-weight:600;color:white;">Weaker, still useful</span>
+      </div>
+      <div style="font-family:var(--font-heading);font-size:30px;font-weight:600;color:var(--color-text);">Just what they browsed</div>
+      <div style="font-family:var(--font-heading);font-size:20px;color:var(--color-neutral-600);font-weight:600;">pages viewed, price range, brand breadth</div>
+    </div>
+  </div>
+  <div class="blueprint" style="padding:36px;font-size:30px;color:var(--color-text);line-height:1.5;font-weight:400;margin-top:40px;">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <strong style="font-family:var(--font-heading);color:var(--color-accent-700);font-weight:600;">Product:</strong> page-view count, price range browsed, and brand breadth are the real, actionable levers — you can't design for "make someone browse longer," but you can design for these.
+  </div>
+</section>
+
+<section data-label="Confidence Check" data-speaker-notes="Before we act on any of this, we wanted to know it wasn't a one-month fluke. So we validated every pattern I've shown by checking whether October's behavior held up in November — which includes Black Friday week, historically the most unusual shopping period of the year. It held. The top 10 best-selling products were 9 out of 10 identical between the two months, and our predictive accuracy didn't degrade — it actually rose slightly. This gives us confidence these are stable, ongoing patterns, not a one-time artifact." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">07 — CONFIDENCE CHECK</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 60px 0;">Tested on November — including Black Friday — and it held</h2>
+  <div style="display:flex;flex:1;gap:70px;">
+    <div class="blueprint" style="flex:1;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:20px;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div style="font-family:var(--font-heading);font-size:104px;font-weight:600;color:var(--color-accent-700);line-height:1;">9 / 10</div>
+      <div style="font-size:28px;color:var(--color-text);font-weight:400;">of October's top-10 best-selling products were still top-10 in November.</div>
+    </div>
+    <div class="blueprint" style="flex:1;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:20px;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div style="font-family:var(--font-heading);font-size:64px;font-weight:600;color:var(--color-accent-700);line-height:1;">Held ↗</div>
+      <div style="font-size:28px;color:var(--color-text);font-weight:400;">Predictive accuracy did not degrade month over month — it rose slightly.</div>
+    </div>
+  </div>
+  <div style="font-size:28px;color:var(--color-neutral-700);font-weight:400;margin-top:44px;">These are stable, ongoing patterns — not a one-month fluke.</div>
+</section>
+
+<section data-label="Black Friday" data-speaker-notes="One bonus finding worth flagging. Purchase count did spike hugely on November 29th, Black Friday itself, as expected. But the single highest revenue day of the entire month was actually November 17th — not Black Friday. So before assuming Black Friday is automatically the best revenue day to plan around and staff for, it's worth knowing that volume and revenue don't always peak on the same day." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">08 — BONUS FINDING</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 60px 0;">Black Friday spiked volume — not revenue</h2>
+  <div style="display:flex;flex:1;align-items:center;gap:90px;">
+    <div class="blueprint" style="padding:40px;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <svg width="820" height="440" viewBox="0 0 900 500">
+        <line x1="40" y1="440" x2="880" y2="440" style="stroke:var(--color-divider);" stroke-width="2"></line>
+        <path d="M40,400 C 200,395 340,410 460,420 C 560,428 640,415 700,340 C 740,290 800,80 860,60" fill="none" style="stroke:var(--color-accent-400);" stroke-width="5"></path>
+        <circle cx="860" cy="60" r="10" style="fill:var(--color-accent-400);"></circle>
+        <text x="860" y="35" text-anchor="end" font-size="24" font-weight="600" style="fill:var(--color-accent-700);font-family:var(--font-heading);">Nov 29 — purchase count spike</text>
+        <path d="M40,420 C 200,400 320,300 400,180 C 460,95 520,190 600,260 C 700,340 800,410 860,415" fill="none" style="stroke:var(--color-accent-700);" stroke-width="5"></path>
+        <circle cx="420" cy="165" r="10" style="fill:var(--color-accent-700);"></circle>
+        <text x="420" y="130" text-anchor="middle" font-size="24" font-weight="600" style="fill:var(--color-accent-700);font-family:var(--font-heading);">Nov 17 — highest revenue day</text>
+        <text x="40" y="475" font-size="20" style="fill:var(--color-neutral-600);font-family:var(--font-body);">Nov 1</text>
+        <text x="840" y="475" font-size="20" style="fill:var(--color-neutral-600);font-family:var(--font-body);">Nov 30</text>
+      </svg>
+    </div>
+    <div class="blueprint" style="flex:1;padding:48px;font-size:30px;color:var(--color-text);line-height:1.6;font-weight:400;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      Worth knowing before assuming Black Friday is automatically the best revenue day to plan around.
+    </div>
+  </div>
+</section>
+
+<section data-label="Recommendations" data-speaker-notes="Pulling it all together, grouped by who owns each action. Product: fix the discovery and recommendation surfaces first — that's the highest-ROI move given where the real leak is — simplify brand comparison, and test cheaper-alternative nudges at the cart. CX: focus specifically on the view-to-cart drop-off, not the checkout flow, since checkout is already converting well at 83%. Marketing: time promos to the 7-to-10am UTC window, retarget long-session non-returners with a nudge, and protect visibility for smartphones and the top three brands." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">09 — RECOMMENDATIONS</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 56px 0;">What each team should do next</h2>
+  <div style="display:flex;flex:1;gap:44px;">
+    <div class="blueprint" style="flex:1;padding:48px 40px;display:flex;flex-direction:column;gap:22px;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div style="font-family:var(--font-heading);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-700);font-weight:600;">Owner</div>
+      <div style="font-family:var(--font-heading);font-size:32px;font-weight:600;color:var(--color-text);">Product</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">Fix discovery / recommendation surfaces — highest ROI</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">Simplify brand comparison</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">Test cheaper-alternative nudges at cart</div>
+    </div>
+    <div class="blueprint" style="flex:1;padding:48px 40px;display:flex;flex-direction:column;gap:22px;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div style="font-family:var(--font-heading);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-700);font-weight:600;">Owner</div>
+      <div style="font-family:var(--font-heading);font-size:32px;font-weight:600;color:var(--color-text);">Customer Experience</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">Investigate the view → cart drop-off specifically</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">Not the checkout flow — that's already converting well</div>
+    </div>
+    <div class="blueprint" style="flex:1;padding:48px 40px;display:flex;flex-direction:column;gap:22px;">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div style="font-family:var(--font-heading);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-700);font-weight:600;">Owner</div>
+      <div style="font-family:var(--font-heading);font-size:32px;font-weight:600;color:var(--color-text);">Marketing</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">Time promos to the 7–10am UTC window</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">Retarget long-session non-returners</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">Protect smartphone / top-3-brand visibility</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Next Steps" data-speaker-notes="Three concrete next steps. First, A/B test retargeting the top-scored cart-abandoners against a control group to measure real lift — the ranking exists, but we haven't proven it moves revenue yet. Second, stand up a live monitoring dashboard so these metrics are tracked ongoing, not as a one-time study. Third, and this is a real gap: this model only knows what happened within a single session — it doesn't know if a shopper has bought from us before. Adding cross-session purchase history is the single biggest lever we haven't tested yet." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-accent-700);font-weight:600;">10 — NEXT STEPS</div>
+  <h2 style="font-family:var(--font-heading);font-size:56px;color:var(--color-text);font-weight:600;margin:16px 0 70px 0;">Three moves to make this actionable</h2>
+  <div style="display:flex;flex:1;gap:56px;">
+    <div style="flex:1;display:flex;flex-direction:column;gap:24px;">
+      <div style="font-family:var(--font-heading);font-size:88px;font-weight:600;color:var(--color-accent-300);line-height:1;">1</div>
+      <div style="font-family:var(--font-heading);font-size:32px;font-weight:600;color:var(--color-text);">A/B test the ranking</div>
+      <div style="font-size:23px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">retarget top-scored cart-abandoners against a control group to measure real lift.</div>
+    </div>
+    <div style="width:1px;background:var(--color-divider);"></div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:24px;">
+      <div style="font-family:var(--font-heading);font-size:88px;font-weight:600;color:var(--color-accent-300);line-height:1;">2</div>
+      <div style="font-family:var(--font-heading);font-size:32px;font-weight:600;color:var(--color-text);">Stand up live monitoring</div>
+      <div style="font-size:23px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">track conversion and the Oct-vs-Nov gap ongoing, not as a one-time study.</div>
+    </div>
+    <div style="width:1px;background:var(--color-divider);"></div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:24px;">
+      <div style="font-family:var(--font-heading);font-size:88px;font-weight:600;color:var(--color-accent-300);line-height:1;">3</div>
+      <div style="font-family:var(--font-heading);font-size:32px;font-weight:600;color:var(--color-text);">Add cross-session history</div>
+      <div style="font-size:23px;color:var(--color-neutral-700);font-weight:400;line-height:1.5;">the model doesn't know returning-customer status yet — the biggest untested lever.</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Appendix" data-speaker-notes="For anyone curious about methodology: this analysis is based on roughly two months of full clickstream data, about 110 million raw events, covering views, cart adds, and purchases. Patterns were identified on October data and validated by holding out November — including Black Friday week — as an out-of-sample test. Happy to go deeper on the modeling approach offline if useful." style="width:1920px;height:1080px;background:var(--color-bg);display:flex;flex-direction:column;padding:100px 140px;box-sizing:border-box;font-family:var(--font-body);">
+  <div style="font-family:var(--font-heading);font-size:20px;letter-spacing:0.12em;color:var(--color-neutral-600);font-weight:600;">APPENDIX — METHODOLOGY</div>
+  <h2 style="font-family:var(--font-heading);font-size:48px;color:var(--color-text);font-weight:600;margin:16px 0 60px 0;">How this analysis was built</h2>
+  <div style="display:flex;flex:1;gap:60px;">
+    <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+      <div style="font-family:var(--font-heading);font-size:24px;font-weight:600;color:var(--color-accent-700);">Data</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.6;">Full site clickstream, 2 months, ~110M events (views, cart adds, purchases).</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+      <div style="font-family:var(--font-heading);font-size:24px;font-weight:600;color:var(--color-accent-700);">Approach</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.6;">A machine-learning tool that scores each cart by how the shopper was behaving in that visit. We tried scoring by "what they browsed" first, but it wasn't reliable enough on its own — "how they browsed" is what actually works.</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+      <div style="font-family:var(--font-heading);font-size:24px;font-weight:600;color:var(--color-accent-700);">Validation</div>
+      <div style="font-size:25px;color:var(--color-neutral-700);font-weight:400;line-height:1.6;">Patterns identified on October, confirmed out-of-sample on November — including Black Friday week.</div>
+    </div>
+  </div>
+  <div style="font-size:22px;color:var(--color-neutral-600);margin-top:40px;">Full modeling detail available on request.</div>
+</section>
+
+  </div>
+
+  <div id="deck-bar">
+    <button class="deck-btn" id="deck-prev" aria-label="Previous slide">‹</button>
+    <span id="deck-counter">1 / 12</span>
+    <button class="deck-btn" id="deck-next" aria-label="Next slide">›</button>
+    <button id="deck-notes-toggle">NOTES</button>
+  </div>
+  <div id="deck-notes"><div class="notes-label">Speaker notes</div><div id="deck-notes-text"></div></div>
+</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('#deck-stage > section'));
+  var current = 0;
+  var stage = document.getElementById('deck-stage');
+  var viewport = document.getElementById('deck-viewport');
+  var counter = document.getElementById('deck-counter');
+  var notesPanel = document.getElementById('deck-notes');
+  var notesText = document.getElementById('deck-notes-text');
+  var prevBtn = document.getElementById('deck-prev');
+  var nextBtn = document.getElementById('deck-next');
+  var notesVisible = false;
+
+  function render() {
+    slides.forEach(function (s, i) { s.style.display = i === current ? 'flex' : 'none'; });
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+    notesText.textContent = slides[current].getAttribute('data-speaker-notes') || '(no notes for this slide)';
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+  }
+
+  function updateScale() {
+    var scale = Math.min(viewport.clientWidth / 1920, viewport.clientHeight / 1080) * 0.94;
+    stage.style.transform = 'scale(' + scale + ')';
+  }
+
+  function next() { if (current < slides.length - 1) { current++; render(); } }
+  function prev() { if (current > 0) { current--; render(); } }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+  document.getElementById('deck-notes-toggle').addEventListener('click', function () {
+    notesVisible = !notesVisible;
+    notesPanel.style.display = notesVisible ? 'block' : 'none';
+  });
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    if (e.key === 'n' || e.key === 'N') { notesVisible = !notesVisible; notesPanel.style.display = notesVisible ? 'block' : 'none'; }
+  });
+  window.addEventListener('resize', updateScale);
+
+  updateScale();
+  render();
+})();
+</script>
+</body>
+</html>

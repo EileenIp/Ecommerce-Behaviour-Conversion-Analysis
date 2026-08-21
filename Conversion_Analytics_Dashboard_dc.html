@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pulse — Conversion Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --color-bg: oklch(98% 0.006 255);
+    --color-text: oklch(20% 0.02 255);
+    --color-divider: oklch(88% 0.012 255);
+    --color-neutral-200: oklch(94% 0.006 255);
+    --color-neutral-300: oklch(90% 0.008 255);
+    --color-neutral-400: oklch(82% 0.01 255);
+    --color-neutral-600: oklch(55% 0.02 255);
+    --color-neutral-700: oklch(45% 0.02 255);
+    --color-accent: oklch(40% 0.13 258);
+    --color-accent-2-900: oklch(45% 0.14 25);
+    --color-accent-100: oklch(93% 0.025 258);
+    --color-accent-300: oklch(75% 0.09 258);
+    --color-accent-400: oklch(65% 0.11 258);
+    --color-accent-500: oklch(55% 0.125 258);
+    --color-accent-700: oklch(40% 0.13 258);
+    --color-accent-800: oklch(28% 0.11 258);
+    --color-accent-900: oklch(16% 0.055 258);
+    --font-heading: 'IBM Plex Sans', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--color-neutral-400); border-radius: 4px; }
+  a { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent-900); }
+  h5, h6 { font-family: var(--font-heading); font-weight: 600; color: var(--color-text); }
+  h5 { font-size: 15px; } h6 { font-size: 13px; }
+  .nav { display: flex; align-items: center; gap: 14px; padding: 12px var(--space-6); }
+  .nav-brand { font-family: var(--font-heading); font-weight: 600; font-size: 15px; }
+  .card-kicker { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-neutral-700); font-weight: 600; }
+  .blueprint { position: relative; border: 1px solid var(--color-divider); background: white; }
+  .corner { position: absolute; width: 14px; height: 14px; pointer-events: none; }
+  .corner.tl { top: -1px; left: -1px; border-top: 2px solid var(--color-accent-400); border-left: 2px solid var(--color-accent-400); }
+  .corner.tr { top: -1px; right: -1px; border-top: 2px solid var(--color-accent-400); border-right: 2px solid var(--color-accent-400); }
+  .corner.bl { bottom: -1px; left: -1px; border-bottom: 2px solid var(--color-accent-400); border-left: 2px solid var(--color-accent-400); }
+  .corner.br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--color-accent-400); border-right: 2px solid var(--color-accent-400); }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 11px; color: var(--color-neutral-700); font-weight: 600; }
+  .input, select.input { font-family: var(--font-body); font-size: 13px; padding: 6px 8px; border: 1px solid var(--color-divider); border-radius: 3px; background: white; color: var(--color-text); }
+  .seg { display: inline-flex; border: 1px solid var(--color-divider); border-radius: 4px; overflow: hidden; }
+  .seg-opt { display: flex; align-items: center; gap: 5px; font-size: 12px; padding: 6px 12px; cursor: pointer; border-right: 1px solid var(--color-divider); user-select: none; }
+  .seg-opt:last-child { border-right: none; }
+  .seg-opt input { margin: 0; }
+  .seg-opt.checked { background: var(--color-accent-100); color: var(--color-accent-800); font-weight: 600; }
+  .tag { display: inline-flex; align-items: center; font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
+  .tag-outline { border: 1px solid var(--color-divider); color: var(--color-neutral-700); }
+  .tag-accent { background: var(--color-accent-100); color: var(--color-accent-800); }
+  .btn { font-family: var(--font-body); font-size: 13px; padding: 7px 14px; border-radius: 4px; border: 1px solid var(--color-divider); background: white; cursor: pointer; color: var(--color-text); }
+  .btn-secondary { background: var(--color-accent-100); border-color: var(--color-accent-300); color: var(--color-accent-800); position: relative; overflow: hidden; }
+  .btn-ghost { background: transparent; border: none; color: var(--color-neutral-700); text-decoration: underline; }
+  .table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-neutral-700); padding: 6px 8px; border-bottom: 1px solid var(--color-divider); }
+  .table td { padding: 6px 8px; border-bottom: 1px solid var(--color-neutral-200); }
+</style>
+</head>
+<body>
+
+<div id="app" style="min-width:1180px;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);min-height:100vh;box-sizing:border-box;"></div>
+
+<script>
+// ============================================================================
+// SEED DATA — unchanged from the original build
+// ============================================================================
+const RAW = {
+  months: {
+    oct: { events: 42418544, viewPct: 96.13, cartPct: 2.12, purchasePct: 1.75, purchases: 742773, revenue: 229933216, sessionRate: 6.81 },
+    nov: { events: 67401449, viewPct: 94.29, cartPct: 4.35, purchasePct: 1.36, purchases: 916930, revenue: 275193088, sessionRate: 5.61 },
+  },
+  hourly: [1.05,0.98,0.96,1.0,1.08,1.2,1.45,1.9,2.35,2.85,2.6,2.3,2.05,1.95,1.85,1.8,1.75,1.7,1.68,1.65,1.6,1.5,1.35,1.15],
+  categories: [
+    { name: 'electronics.smartphone', traffic: 18.4, conversion: 2.94 },
+    { name: 'electronics.audio.headphone', traffic: 6.1, conversion: 2.75 },
+    { name: 'computers.notebook', traffic: 12.2, conversion: 1.65 },
+    { name: 'electronics.video.tv', traffic: 7.6, conversion: 1.9 },
+    { name: 'appliances.kitchen.washer', traffic: 4.3, conversion: 2.05 },
+    { name: 'furniture.living_room.sofa', traffic: 5.0, conversion: 1.35 },
+    { name: 'electronics.clocks', traffic: 9.8, conversion: 1.1 },
+    { name: 'apparel.shoes', traffic: 14.5, conversion: 0.85 },
+  ],
+  categoryAvgConversion: 1.4,
+  brands: [
+    { name: 'Samsung', purchaseShare: 23.3, traffic: 15.8, conversion: 3.28 },
+    { name: 'Apple', purchaseShare: 19.2, traffic: 11.4, conversion: 3.47 },
+    { name: 'Xiaomi', purchaseShare: 7.6, traffic: 9.2, conversion: 1.95 },
+    { name: 'Huawei', purchaseShare: 4.9, traffic: 6.5, conversion: 1.6 },
+    { name: 'LG', purchaseShare: 3.8, traffic: 4.9, conversion: 2.1 },
+    { name: 'Oppo', purchaseShare: 2.6, traffic: 5.8, conversion: 1.4 },
+    { name: 'Sony', purchaseShare: 2.2, traffic: 2.1, conversion: 2.6 },
+    { name: 'Other / unbranded', purchaseShare: 36.4, traffic: 44.3, conversion: 0.9 },
+  ],
+  priceBands: {
+    labels: ['$0', '$1-25', '$25-50', '$50-100', '$100-250', '$250+'],
+    ranges: [[0,0],[1,25],[25,50],[50,100],[100,250],[250,100000]],
+    oct: [2, 18, 22, 27, 21, 10],
+    nov: [3, 24, 25, 24, 16, 8],
+  },
+};
+
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function buildDaily(total, days, fixed, boostDay, boostFactor, seed) {
+  const rand = mulberry32(seed);
+  const weights = [];
+  for (let d = 1; d <= days; d++) {
+    if (fixed[d] !== undefined) { weights.push(0); continue; }
+    let w = 0.7 + rand() * 0.6 + 0.25 * Math.sin(d / 3.3);
+    if (d === boostDay) w *= boostFactor;
+    weights.push(Math.max(0.15, w));
+  }
+  const fixedSum = Object.values(fixed).reduce((a, b) => a + b, 0);
+  const remaining = total - fixedSum;
+  const wSum = weights.reduce((a, b) => a + b, 0);
+  const vals = [];
+  for (let d = 1; d <= days; d++) {
+    vals.push(fixed[d] !== undefined ? fixed[d] : Math.round((weights[d - 1] / wSum) * remaining));
+  }
+  return vals;
+}
+function isoDate(y, m, d) { return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`; }
+const OCT_DATES = Array.from({ length: 31 }, (_, i) => isoDate(2019, 10, i + 1));
+const NOV_DATES = Array.from({ length: 30 }, (_, i) => isoDate(2019, 11, i + 1));
+const DAILY = {
+  oct: { revenue: buildDaily(229933216, 31, {}, 31, 1.3, 3), purchases: buildDaily(742773, 31, {}, 31, 1.4, 13), dates: OCT_DATES },
+  nov: { revenue: buildDaily(275193088, 30, { 15: 0, 17: 57774480 }, 29, 1.6, 7), purchases: buildDaily(916930, 30, {}, 29, 3.2, 11), dates: NOV_DATES },
+};
+
+const COLOR = { accent: '#5980a6', accent700: '#416180', accent900: '#1d2d3d', amber: 'oklch(0.72 0.15 70)', red: 'oklch(0.58 0.19 25)', neutral: '#98989b' };
+
+let pluginRegistered = false;
+const pointLabelPlugin = {
+  id: 'pointLabelPlugin',
+  afterDatasetsDraw(chart) {
+    const points = chart.config.options.plugins.pointLabelPlugin && chart.config.options.plugins.pointLabelPlugin.points;
+    if (!points || !points.length) return;
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0);
+    points.forEach(p => {
+      const el = meta.data[p.index];
+      if (!el) return;
+      ctx.save();
+      ctx.font = '600 11px IBM Plex Sans, sans-serif';
+      ctx.fillStyle = p.color || COLOR.accent700;
+      ctx.textAlign = 'center';
+      ctx.fillText(p.text, el.x, el.y - 14);
+      ctx.restore();
+    });
+  },
+};
+
+const SEGMENTS = [
+  { id: 1, score: 94.6, size: 32, label: 'Appliances / LG / Mon night' },
+  { id: 2, score: 94.5, size: 53, label: 'Appliances / LG / Sun night' },
+  { id: 3, score: 94.2, size: 49, label: 'Appliances / LG / Mon afternoon' },
+  { id: 4, score: 93.7, size: 65, label: 'Electronics / Artel / Thu afternoon' },
+  { id: 5, score: 93.6, size: 20, label: 'Electronics / Oppo / Tue night' },
+  { id: 6, score: 93.5, size: 40, label: 'Electronics / Oppo / Fri morning' },
+];
+
+function fmtNum(n) { return Math.round(n).toLocaleString('en-US'); }
+function fmtCurrency(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+function fmtPct(n, d) { return (n || 0).toFixed(d === undefined ? 1 : d) + '%'; }
+function deltaPct(base, cur) { return ((cur - base) / base) * 100; }
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+// ============================================================================
+// APP — vanilla JS port of the original reactive component
+// ============================================================================
+const App = {
+  charts: {},
+  uploadedRows: null,
+  uploadedMeta: null,
+  state: {
+    month: 'all', category: 'all', brand: 'all', segmentId: null, view: 'table',
+    catSort: { key: 'conversion', dir: 'desc' }, brandSort: { key: 'purchaseShare', dir: 'desc' },
+    dateStart: null, dateEnd: null, priceMin: null, priceMax: null,
+    uploading: false, uploadError: null,
+  },
+
+  setState(patch) {
+    Object.assign(this.state, patch);
+    this.renderAndMount();
+  },
+
+  getDateBounds() {
+    if (this.state.month === 'uploaded' && this.uploadedMeta) return [this.uploadedMeta.minDate, this.uploadedMeta.maxDate];
+    return ['2019-10-01', '2019-11-30'];
+  },
+  getPriceBounds() {
+    if (this.state.month === 'uploaded' && this.uploadedMeta) return [0, this.uploadedMeta.maxPrice];
+    return [0, 1000];
+  },
+
+  parseCSV(text) {
+    const lines = text.split(/\r?\n/);
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i];
+      if (!line) continue;
+      const p = line.split(',');
+      if (p.length < 9) continue;
+      const time = p[0], type = p[1], category = p[4], brand = p[5], price = parseFloat(p[6]) || 0;
+      if (!time || time.length < 13) continue;
+      rows.push({ date: time.slice(0, 10), hour: parseInt(time.slice(11, 13), 10) || 0, type, category: category || '', brand: brand || '', price });
+    }
+    return rows;
+  },
+
+  handleFile(e) {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    this.setState({ uploading: true, uploadError: null });
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const rows = this.parseCSV(ev.target.result);
+        if (!rows.length) throw new Error('empty');
+        let minDate = null, maxDate = null, minPrice = Infinity, maxPrice = 0;
+        rows.forEach(r => {
+          if (!minDate || r.date < minDate) minDate = r.date;
+          if (!maxDate || r.date > maxDate) maxDate = r.date;
+          if (r.price < minPrice) minPrice = r.price;
+          if (r.price > maxPrice) maxPrice = r.price;
+        });
+        this.uploadedRows = rows;
+        this.uploadedMeta = { fileName: file.name, rowCount: rows.length, minDate, maxDate, minPrice: Math.floor(minPrice), maxPrice: Math.ceil(maxPrice) };
+        this.setState({ month: 'uploaded', category: 'all', brand: 'all', segmentId: null, dateStart: null, dateEnd: null, priceMin: null, priceMax: null, uploading: false, uploadError: null });
+      } catch (err) {
+        this.setState({ uploading: false, uploadError: 'Could not parse file — expecting event_time,event_type,product_id,category_id,category_code,brand,price,user_id,user_session columns.' });
+      }
+    };
+    reader.onerror = () => this.setState({ uploading: false, uploadError: 'Failed to read file.' });
+    reader.readAsText(file);
+  },
+  clearUpload() {
+    this.uploadedRows = null; this.uploadedMeta = null;
+    this.setState({ month: 'all', dateStart: null, dateEnd: null, priceMin: null, priceMax: null, uploadError: null });
+  },
+
+  aggregateUploaded(rows) {
+    let views = 0, carts = 0, purchases = 0, revenue = 0;
+    const byCategory = {}, byBrand = {}, byHour = Array.from({ length: 24 }, () => ({ views: 0, purchases: 0 })), byDate = {};
+    const bands = [0, 0, 0, 0, 0, 0];
+    rows.forEach(r => {
+      if (r.type === 'view') views++; else if (r.type === 'cart') carts++; else if (r.type === 'purchase') { purchases++; revenue += r.price; }
+      if (r.category) { const c = byCategory[r.category] || (byCategory[r.category] = { views: 0, purchases: 0 }); if (r.type === 'view') c.views++; if (r.type === 'purchase') c.purchases++; }
+      if (r.brand) { const b = byBrand[r.brand] || (byBrand[r.brand] = { views: 0, purchases: 0 }); if (r.type === 'view') b.views++; if (r.type === 'purchase') b.purchases++; }
+      const h = byHour[r.hour]; if (r.type === 'view') h.views++; if (r.type === 'purchase') h.purchases++;
+      const dd = byDate[r.date] || (byDate[r.date] = { revenue: 0, purchases: 0 }); if (r.type === 'purchase') { dd.revenue += r.price; dd.purchases++; }
+      if (r.type === 'purchase') { const price = r.price; const idx = price <= 0 ? 0 : price <= 25 ? 1 : price <= 50 ? 2 : price <= 100 ? 3 : price <= 250 ? 4 : 5; bands[idx]++; }
+    });
+    return { total: rows.length, views, carts, purchases, revenue, byCategory, byBrand, byHour, byDate, bands };
+  },
+
+  computeData() {
+    const st = this.state;
+    const oct = RAW.months.oct, nov = RAW.months.nov;
+    const octAov = oct.revenue / oct.purchases, novAov = nov.revenue / nov.purchases;
+    const dateBounds = this.getDateBounds(), priceBounds = this.getPriceBounds();
+    const effDateStart = st.dateStart || dateBounds[0], effDateEnd = st.dateEnd || dateBounds[1];
+    const effPriceMin = st.priceMin == null ? priceBounds[0] : st.priceMin, effPriceMax = st.priceMax == null ? priceBounds[1] : st.priceMax;
+    const rangeActive = effDateStart !== dateBounds[0] || effDateEnd !== dateBounds[1];
+
+    let headline, categories, brands, hourly = RAW.hourly, dailyChart, priceBandPct = null, dimBands = null;
+
+    if (st.month === 'uploaded' && this.uploadedRows) {
+      const filtered = this.uploadedRows.filter(r => r.date >= effDateStart && r.date <= effDateEnd && r.price >= effPriceMin && r.price <= effPriceMax);
+      const agg = this.aggregateUploaded(filtered);
+      const total = agg.total || 1, views = agg.views || 1;
+      headline = { events: agg.total, viewPct: agg.views / total * 100, cartPct: agg.carts / total * 100, purchasePct: agg.purchases / total * 100, revenue: agg.revenue, aov: agg.purchases ? agg.revenue / agg.purchases : 0, showDelta: false };
+      categories = Object.entries(agg.byCategory).map(([name, v]) => ({ name, traffic: v.views / views * 100, conversion: v.views ? v.purchases / v.views * 100 : 0 })).sort((a, b) => b.traffic - a.traffic).slice(0, 8);
+      brands = Object.entries(agg.byBrand).map(([name, v]) => ({ name, purchaseShare: v.purchases / (agg.purchases || 1) * 100, traffic: v.views / views * 100, conversion: v.views ? v.purchases / v.views * 100 : 0 })).sort((a, b) => b.purchaseShare - a.purchaseShare).slice(0, 8);
+      hourly = agg.byHour.map(h => h.views ? h.purchases / h.views * 100 : 0);
+      const dates = Object.keys(agg.byDate).sort();
+      dailyChart = { labels: dates, data: dates.map(dt => agg.byDate[dt].revenue), points: [] };
+      const bandTotal = agg.purchases || 1;
+      priceBandPct = agg.bands.map(c => c / bandTotal * 100);
+    } else {
+      const month = st.month === 'uploaded' ? 'all' : st.month;
+      if (month === 'oct') headline = { events: oct.events, viewPct: oct.viewPct, cartPct: oct.cartPct, purchasePct: oct.purchasePct, revenue: oct.revenue, aov: octAov, showDelta: false };
+      else if (month === 'nov') headline = { events: nov.events, viewPct: nov.viewPct, cartPct: nov.cartPct, purchasePct: nov.purchasePct, revenue: nov.revenue, aov: novAov, showDelta: true,
+        eventsDelta: deltaPct(oct.events, nov.events), revenueDelta: deltaPct(oct.revenue, nov.revenue), aovDelta: deltaPct(octAov, novAov) };
+      else {
+        const events = oct.events + nov.events, revenue = oct.revenue + nov.revenue, purchases = oct.purchases + nov.purchases;
+        const viewPct = (oct.viewPct * oct.events + nov.viewPct * nov.events) / events;
+        const cartPct = (oct.cartPct * oct.events + nov.cartPct * nov.events) / events;
+        const purchasePct = (oct.purchasePct * oct.events + nov.purchasePct * nov.events) / events;
+        headline = { events, viewPct, cartPct, purchasePct, revenue, aov: revenue / purchases, showDelta: true,
+          eventsDelta: deltaPct(oct.events, nov.events), revenueDelta: deltaPct(oct.revenue, nov.revenue), aovDelta: deltaPct(octAov, novAov) };
+      }
+      if (rangeActive) {
+        const monthsToUse = month === 'all' ? ['oct', 'nov'] : [month];
+        let revenue = 0, purchases = 0, basePurchases = month === 'all' ? oct.purchases + nov.purchases : (month === 'oct' ? oct.purchases : nov.purchases);
+        monthsToUse.forEach(m => { DAILY[m].dates.forEach((dt, i) => { if (dt >= effDateStart && dt <= effDateEnd) { revenue += DAILY[m].revenue[i]; purchases += DAILY[m].purchases[i]; } }); });
+        headline = Object.assign({}, headline, { revenue, aov: purchases ? revenue / purchases : 0, events: Math.round(headline.events * (purchases / (basePurchases || 1))), showDelta: false });
+      }
+      categories = RAW.categories;
+      brands = RAW.brands;
+      const monthsToUse = month === 'all' ? ['oct', 'nov'] : [month];
+      let labels = [], data = [], points = [];
+      monthsToUse.forEach(m => {
+        const dts = DAILY[m].dates.map((dt, i) => ({ dt, i })).filter(x => x.dt >= effDateStart && x.dt <= effDateEnd);
+        dts.forEach(x => { labels.push(x.dt.slice(5)); data.push(DAILY[m].revenue[x.i]); });
+      });
+      if ((month === 'nov' || month === 'all') && effDateStart <= '2019-11-17' && effDateEnd >= '2019-11-17') points.push({ index: labels.indexOf('11-17'), text: 'Peak $57.8M', color: COLOR.accent700 });
+      if ((month === 'nov' || month === 'all') && effDateStart <= '2019-11-15' && effDateEnd >= '2019-11-15') points.push({ index: labels.indexOf('11-15'), text: 'Trough $0', color: COLOR.red });
+      if ((month === 'nov' || month === 'all') && effDateStart <= '2019-11-29' && effDateEnd >= '2019-11-29') points.push({ index: labels.indexOf('11-29'), text: 'Black Friday', color: COLOR.amber });
+      dailyChart = { labels, data, points };
+      if (effPriceMin !== priceBounds[0] || effPriceMax !== priceBounds[1]) {
+        dimBands = RAW.priceBands.ranges.map(r => !(r[1] >= effPriceMin && r[0] <= effPriceMax));
+      }
+    }
+
+    const cartToPurchase = headline.cartPct ? headline.purchasePct / headline.cartPct * 100 : 0;
+    const kpis = {
+      eventsFmt: fmtNum(headline.events),
+      viewFmt: fmtPct(headline.viewPct), cartFmt: fmtPct(headline.cartPct), purchaseFmt: fmtPct(headline.purchasePct),
+      revenueFmt: fmtCurrency(headline.revenue),
+      aovFmt: fmtCurrency(headline.aov),
+      cartToPurchaseFmt: fmtPct(cartToPurchase),
+      showDelta: headline.showDelta,
+      eventsUp: headline.eventsDelta > 0, eventsDeltaFmt: headline.showDelta ? (headline.eventsDelta >= 0 ? '+' : '') + headline.eventsDelta.toFixed(1) + '%' : '',
+      eventsDeltaColor: headline.eventsDelta >= 0 ? COLOR.accent700 : COLOR.red,
+      revenueUp: headline.revenueDelta > 0, revenueDeltaFmt: headline.showDelta ? (headline.revenueDelta >= 0 ? '+' : '') + headline.revenueDelta.toFixed(1) + '%' : '',
+      revenueDeltaColor: headline.revenueDelta >= 0 ? COLOR.accent700 : COLOR.red,
+      aovUp: headline.aovDelta > 0, aovDown: headline.aovDelta < 0, aovDeltaFmt: headline.showDelta ? (headline.aovDelta >= 0 ? '+' : '') + headline.aovDelta.toFixed(1) + '%' : '',
+      aovDeltaColor: headline.aovDelta >= 0 ? COLOR.accent700 : COLOR.red,
+    };
+
+    const funnelStages = [
+      { name: 'View', valueFmt: fmtPct(headline.viewPct), widthPct: 100 },
+      { name: 'Cart', valueFmt: fmtPct(headline.cartPct), widthPct: Math.max(4, headline.cartPct / headline.viewPct * 100) },
+      { name: 'Purchase', valueFmt: fmtPct(headline.purchasePct), widthPct: Math.max(2, headline.purchasePct / headline.viewPct * 100) },
+    ];
+
+    const catSort = st.catSort;
+    let catRows = categories.map(c => Object.assign({}, c));
+    catRows.sort((a, b) => (a[catSort.key] > b[catSort.key] ? 1 : -1) * (catSort.dir === 'asc' ? 1 : -1));
+    catRows = catRows.map(c => Object.assign({}, c, {
+      trafficFmt: fmtPct(c.traffic), conversionFmt: fmtPct(c.conversion),
+      rowOpacity: st.category === 'all' || st.category === c.name ? 1 : 0.35,
+      rowBg: st.category === c.name ? 'color-mix(in srgb, var(--color-accent) 10%, transparent)' : 'transparent',
+      mismatch: c.traffic > 8 && c.conversion < RAW.categoryAvgConversion ? COLOR.red : 'inherit',
+    }));
+
+    const brandSort = st.brandSort;
+    let brandRows = brands.map(b => Object.assign({}, b));
+    brandRows.sort((a, b) => (a[brandSort.key] > b[brandSort.key] ? 1 : -1) * (brandSort.dir === 'asc' ? 1 : -1));
+    brandRows = brandRows.map(b => Object.assign({}, b, {
+      shareFmt: fmtPct(b.purchaseShare), trafficFmt: fmtPct(b.traffic), conversionFmt: fmtPct(b.conversion),
+      rowOpacity: st.brand === 'all' || st.brand === b.name ? 1 : 0.35,
+      rowBg: st.brand === b.name ? 'color-mix(in srgb, var(--color-accent) 10%, transparent)' : 'transparent',
+      mismatch: b.traffic > b.purchaseShare * 1.3 ? COLOR.red : 'inherit',
+    }));
+
+    const segments = SEGMENTS.map(s => Object.assign({}, s, {
+      scoreFmt: fmtPct(s.score), sizeFmt: fmtNum(s.size),
+      borderColor: st.segmentId === s.id ? COLOR.accent : 'var(--color-divider)',
+      bg: st.segmentId === s.id ? 'color-mix(in srgb, var(--color-accent) 10%, transparent)' : 'transparent',
+    }));
+    const selSeg = SEGMENTS.find(s => s.id === st.segmentId) || null;
+    let segmentDetail = null;
+    if (selSeg) segmentDetail = { scoreFmt: fmtPct(selSeg.score), sizeFmt: fmtNum(selSeg.size) };
+
+    const alerts = [
+      { level: 'Critical', color: COLOR.red, text: `Cart\u2192purchase rate down from ${fmtPct(oct.purchasePct / oct.cartPct * 100)} to ${fmtPct(nov.purchasePct / nov.cartPct * 100)} month over month \u2014 investigate checkout friction.` },
+      { level: 'Warning', color: COLOR.amber, text: 'Revenue peak (Nov 17, $57.8M) did not align with the traffic/purchase-count peak (Nov 29, Black Friday) \u2014 flag for planning.' },
+    ];
+
+    return { headline, kpis, funnelStages, catRows, brandRows, segments, selectedSegment: selSeg, segmentDetail, alerts, hourly, dailyChart, priceBandPct, dimBands, dateBounds, priceBounds, effDateStart, effDateEnd, effPriceMin, effPriceMax };
+  },
+
+  buildCharts(d) {
+    const st = this.state;
+    const destroy = k => { if (this.charts[k]) { this.charts[k].destroy(); delete this.charts[k]; } };
+    if (!pluginRegistered && window.Chart) { Chart.register(pointLabelPlugin); pluginRegistered = true; }
+    if (!window.Chart) return;
+
+    const hourlyCanvas = document.getElementById('hourly-canvas');
+    if (hourlyCanvas) {
+      destroy('hourly');
+      const hours = Array.from({ length: 24 }, (_, i) => i);
+      this.charts.hourly = new Chart(hourlyCanvas.getContext('2d'), {
+        type: 'line',
+        data: { labels: hours.map(h => h + ':00'), datasets: [{ data: d.hourly, borderColor: COLOR.accent700, backgroundColor: 'color-mix(in srgb, var(--color-accent) 15%, transparent)', fill: true, tension: 0.35, pointRadius: hours.map(h => h >= 7 && h <= 10 ? 4 : 0), pointBackgroundColor: COLOR.accent700 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+          scales: { y: { ticks: { callback: v => v + '%' }, grid: { color: 'var(--color-divider)' } }, x: { grid: { display: false } } } },
+      });
+    }
+    const categoryCanvas = document.getElementById('category-canvas');
+    if (categoryCanvas && st.view === 'chart') {
+      destroy('category');
+      this.charts.category = new Chart(categoryCanvas.getContext('2d'), {
+        type: 'bar',
+        data: { labels: d.catRows.map(c => c.name), datasets: [
+          { label: 'Traffic %', data: d.catRows.map(c => c.traffic), backgroundColor: 'var(--color-neutral-400)' },
+          { label: 'Conversion %', data: d.catRows.map(c => c.conversion), backgroundColor: COLOR.accent },
+        ] },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } }, scales: { x: { grid: { color: 'var(--color-divider)' } }, y: { grid: { display: false } } } },
+      });
+    }
+    const brandCanvas = document.getElementById('brand-canvas');
+    if (brandCanvas && st.view === 'chart') {
+      destroy('brand');
+      this.charts.brand = new Chart(brandCanvas.getContext('2d'), {
+        type: 'bar',
+        data: { labels: d.brandRows.map(b => b.name), datasets: [
+          { label: 'Traffic %', data: d.brandRows.map(b => b.traffic), backgroundColor: 'var(--color-neutral-400)' },
+          { label: 'Conversion %', data: d.brandRows.map(b => b.conversion), backgroundColor: COLOR.accent },
+        ] },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } }, scales: { x: { grid: { color: 'var(--color-divider)' } }, y: { grid: { display: false } } } },
+      });
+    }
+    const segmentCanvas = document.getElementById('segment-canvas');
+    if (segmentCanvas) {
+      destroy('segment');
+      this.charts.segment = new Chart(segmentCanvas.getContext('2d'), {
+        data: { labels: SEGMENTS.map(s => s.label),
+          datasets: [
+            { type: 'bar', label: 'Events', data: SEGMENTS.map(s => s.size), backgroundColor: SEGMENTS.map(s => s.id === st.segmentId ? COLOR.accent700 : 'var(--color-neutral-300)'), yAxisID: 'y' },
+            { type: 'line', label: 'Purchase-likeness score %', data: SEGMENTS.map(s => s.score), borderColor: COLOR.red, backgroundColor: COLOR.red, yAxisID: 'y1', tension: 0.3 },
+          ] },
+        options: { responsive: true, maintainAspectRatio: false, onClick: (evt, els) => { if (els[0]) { const s = SEGMENTS[els[0].index]; this.setState({ segmentId: st.segmentId === s.id ? null : s.id }); } },
+          plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } },
+          scales: { y: { position: 'left', title: { display: true, text: 'Events' }, grid: { color: 'var(--color-divider)' } }, y1: { position: 'right', title: { display: true, text: 'Purchase-likeness score %' }, grid: { display: false } }, x: { ticks: { autoSkip: false, maxRotation: 20, minRotation: 20 }, grid: { display: false } } } },
+      });
+    }
+    const revenueCanvas = document.getElementById('revenue-canvas');
+    if (revenueCanvas) {
+      destroy('revenue');
+      const { labels, data, points } = d.dailyChart;
+      this.charts.revenue = new Chart(revenueCanvas.getContext('2d'), {
+        type: 'line',
+        data: { labels, datasets: [{ data, borderColor: COLOR.accent, backgroundColor: 'color-mix(in srgb, var(--color-accent) 12%, transparent)', fill: true, tension: 0.25, pointRadius: labels.map((_, i) => points.some(p => p.index === i) ? 5 : 0), pointBackgroundColor: labels.map((_, i) => { const p = points.find(p => p.index === i); return p ? p.color : COLOR.accent; }) }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, pointLabelPlugin: { points } }, scales: { y: { ticks: { callback: v => '$' + (v / 1e6).toFixed(1) + 'M' }, grid: { color: 'var(--color-divider)' } }, x: { ticks: { autoSkip: true, maxTicksLimit: 12 }, grid: { display: false } } } },
+      });
+    }
+    const priceCanvas = document.getElementById('price-canvas');
+    if (priceCanvas) {
+      destroy('price');
+      const colors = ['var(--color-neutral-300)', 'var(--color-accent-300)', 'var(--color-accent-400)', 'var(--color-accent-500)', 'var(--color-accent-700)', 'var(--color-accent-900)'];
+      let datasets;
+      if (d.priceBandPct) {
+        datasets = RAW.priceBands.labels.map((label, i) => ({ label, data: ['Uploaded'].map(() => d.priceBandPct[i]), backgroundColor: colors[i] }));
+        this.charts.price = new Chart(priceCanvas.getContext('2d'), { type: 'bar', data: { labels: ['Uploaded'], datasets }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } }, scales: { x: { stacked: true, ticks: { callback: v => v + '%' }, grid: { color: 'var(--color-divider)' } }, y: { stacked: true, grid: { display: false } } } } });
+      } else {
+        datasets = RAW.priceBands.labels.map((label, i) => ({ label, data: [RAW.priceBands.oct[i], RAW.priceBands.nov[i]], backgroundColor: d.dimBands && d.dimBands[i] ? 'color-mix(in srgb, ' + colors[i] + ' 30%, transparent)' : colors[i] }));
+        this.charts.price = new Chart(priceCanvas.getContext('2d'), { type: 'bar', data: { labels: ['Oct', 'Nov'], datasets }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, ticks: { callback: v => v + '%' }, grid: { color: 'var(--color-divider)' } } } } });
+      }
+    }
+  },
+
+  // ==========================================================================
+  // RENDER — builds the full HTML string from current state, then wires events
+  // ==========================================================================
+  render() {
+    const d = this.computeData();
+    const st = this.state;
+    const categoryOptions = st.month === 'uploaded' ? d.catRows.map(c => c.name) : RAW.categories.map(c => c.name);
+    const brandOptions = st.month === 'uploaded' ? d.brandRows.map(b => b.name) : RAW.brands.map(b => b.name);
+    const priceRangeLabel = fmtCurrency(d.effPriceMin) + ' \u2013 ' + fmtCurrency(d.effPriceMax);
+    const upArrow = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>';
+    const downArrow = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 10 10"/><path d="M17 7v10H7"/></svg>';
+    const closeIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+
+    const html = `
+    <div class="nav" style="border-bottom:1px solid var(--color-divider);position:sticky;top:0;background:var(--color-bg);z-index:20;">
+      <span class="nav-brand" style="display:flex;align-items:center;gap:10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.5"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.48 12H2"/></svg>
+        Pulse &mdash; Conversion Analytics
+      </span>
+      <span class="tag tag-outline">Live filters</span>
+      <span style="margin-left:auto;font-size:12px;color:var(--color-text);opacity:0.55;">Snapshot: Oct&ndash;Nov 2019</span>
+    </div>
+
+    <div style="display:flex;align-items:flex-end;gap:var(--space-4);padding:var(--space-3) var(--space-6);border-bottom:1px solid var(--color-divider);flex-wrap:wrap;">
+      <div class="field" style="margin:0;">
+        <label>Period</label>
+        <div class="seg">
+          <label class="seg-opt ${st.month === 'all' ? 'checked' : ''}"><input type="radio" name="month" data-action="month" data-value="all" ${st.month === 'all' ? 'checked' : ''}/>All</label>
+          <label class="seg-opt ${st.month === 'oct' ? 'checked' : ''}"><input type="radio" name="month" data-action="month" data-value="oct" ${st.month === 'oct' ? 'checked' : ''}/>Oct</label>
+          <label class="seg-opt ${st.month === 'nov' ? 'checked' : ''}"><input type="radio" name="month" data-action="month" data-value="nov" ${st.month === 'nov' ? 'checked' : ''}/>Nov</label>
+          ${this.uploadedMeta ? `<label class="seg-opt ${st.month === 'uploaded' ? 'checked' : ''}"><input type="radio" name="month" data-action="month" data-value="uploaded" ${st.month === 'uploaded' ? 'checked' : ''}/>Uploaded</label>` : ''}
+        </div>
+      </div>
+      <div class="field" style="margin:0;min-width:200px;">
+        <label>Category</label>
+        <select class="input" data-action="category">
+          <option value="all" ${st.category === 'all' ? 'selected' : ''}>All categories</option>
+          ${categoryOptions.map(opt => `<option value="${esc(opt)}" ${st.category === opt ? 'selected' : ''}>${esc(opt)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field" style="margin:0;min-width:180px;">
+        <label>Brand</label>
+        <select class="input" data-action="brand">
+          <option value="all" ${st.brand === 'all' ? 'selected' : ''}>All brands</option>
+          ${brandOptions.map(opt => `<option value="${esc(opt)}" ${st.brand === opt ? 'selected' : ''}>${esc(opt)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field" style="margin:0;">
+        <label>Date range</label>
+        <div style="display:flex;gap:6px;">
+          <input class="input" type="date" style="width:150px;" min="${d.dateBounds[0]}" max="${d.dateBounds[1]}" value="${d.effDateStart}" data-action="dateStart"/>
+          <input class="input" type="date" style="width:150px;" min="${d.dateBounds[0]}" max="${d.dateBounds[1]}" value="${d.effDateEnd}" data-action="dateEnd"/>
+        </div>
+      </div>
+      <div class="field" style="margin:0;min-width:220px;">
+        <label>Price range &mdash; ${priceRangeLabel}</label>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <input type="range" style="accent-color:var(--color-accent);width:100%;" min="${d.priceBounds[0]}" max="${d.priceBounds[1]}" value="${d.effPriceMin}" data-action="priceMin"/>
+          <input type="range" style="accent-color:var(--color-accent);width:100%;" min="${d.priceBounds[0]}" max="${d.priceBounds[1]}" value="${d.effPriceMax}" data-action="priceMax"/>
+        </div>
+      </div>
+      <div class="field" style="margin:0;">
+        <label>Data source</label>
+        <label class="btn btn-secondary" style="cursor:pointer;">
+          ${st.uploading ? 'Uploading\u2026' : 'Upload CSV'}
+          <input type="file" accept=".csv" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;" data-action="upload"/>
+        </label>
+      </div>
+      ${this.uploadedMeta ? `
+      <div class="tag tag-accent" style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 10px;">
+        ${esc(this.uploadedMeta.fileName)} &middot; ${fmtNum(this.uploadedMeta.rowCount)} rows
+        <button data-action="clearUpload" style="all:unset;cursor:pointer;display:flex;">${closeIcon}</button>
+      </div>` : ''}
+      ${st.uploadError ? `<span style="font-size:12px;color:var(--color-accent-2-900);">${esc(st.uploadError)}</span>` : ''}
+      ${d.selectedSegment ? `
+      <div class="tag tag-accent" style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 10px;">
+        Segment: ${esc(d.selectedSegment.label)}
+        <button data-action="clearSegment" style="all:unset;cursor:pointer;display:flex;">${closeIcon}</button>
+      </div>` : ''}
+      <button class="btn btn-ghost" style="margin-left:auto;" data-action="resetFilters">Reset filters</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:300px 1fr;gap:var(--space-6);padding:var(--space-6);max-width:1760px;margin:0 auto;align-items:start;">
+
+      <aside style="position:sticky;top:76px;display:flex;flex-direction:column;gap:var(--space-3);">
+        <h6 style="margin:0 0 2px;">Trend watch</h6>
+        ${d.alerts.map(a => `
+        <div class="blueprint" style="padding:var(--space-3);border-left:3px solid ${a.color};display:flex;flex-direction:column;gap:6px;">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${a.color}" stroke-width="1.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <span style="font-family:var(--font-heading);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:${a.color};">${a.level}</span>
+          </div>
+          <p style="margin:0;font-size:13px;line-height:1.45;">${a.text}</p>
+        </div>`).join('')}
+        <div class="blueprint" style="padding:var(--space-3);margin-top:var(--space-2);">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h6 style="margin:0 0 6px;">7&ndash;10am UTC</h6>
+          <p style="margin:0;font-size:12px;opacity:0.75;line-height:1.5;">Best-performing purchase-rate window across both months &mdash; consider timing pushes, promos and support staffing around it.</p>
+        </div>
+      </aside>
+
+      <main style="display:flex;flex-direction:column;gap:var(--space-6);min-width:0;">
+
+        <section style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);">
+          <div class="blueprint" style="padding:var(--space-4);display:flex;flex-direction:column;gap:8px;">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <span class="card-kicker">Total events</span>
+            <span style="font-family:var(--font-heading);font-size:30px;font-weight:600;line-height:1;">${d.kpis.eventsFmt}</span>
+            ${d.kpis.showDelta ? `<span style="font-size:12px;color:${d.kpis.eventsDeltaColor};display:flex;align-items:center;gap:4px;">${d.kpis.eventsUp ? upArrow : ''}${d.kpis.eventsDeltaFmt} vs last period</span>` : ''}
+          </div>
+          <div class="blueprint" style="padding:var(--space-4);display:flex;flex-direction:column;gap:8px;">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <span class="card-kicker">Funnel conversion</span>
+            <div style="display:flex;align-items:baseline;gap:6px;font-family:var(--font-heading);font-size:20px;font-weight:600;">
+              <span>${d.kpis.viewFmt}</span><span style="opacity:0.35;font-size:14px;">&rarr;</span>
+              <span>${d.kpis.cartFmt}</span><span style="opacity:0.35;font-size:14px;">&rarr;</span>
+              <span style="color:var(--color-accent-700);">${d.kpis.purchaseFmt}</span>
+            </div>
+            <span style="font-size:11px;opacity:0.6;">view &middot; cart &middot; purchase (of events)</span>
+          </div>
+          <div class="blueprint" style="padding:var(--space-4);display:flex;flex-direction:column;gap:8px;">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <span class="card-kicker">Revenue</span>
+            <span style="font-family:var(--font-heading);font-size:30px;font-weight:600;line-height:1;">${d.kpis.revenueFmt}</span>
+            ${d.kpis.showDelta ? `<span style="font-size:12px;color:${d.kpis.revenueDeltaColor};display:flex;align-items:center;gap:4px;">${d.kpis.revenueUp ? upArrow : ''}${d.kpis.revenueDeltaFmt} vs last period</span>` : ''}
+          </div>
+          <div class="blueprint" style="padding:var(--space-4);display:flex;flex-direction:column;gap:8px;">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <span class="card-kicker">Average order value</span>
+            <span style="font-family:var(--font-heading);font-size:30px;font-weight:600;line-height:1;">${d.kpis.aovFmt}</span>
+            ${d.kpis.showDelta ? `<span style="font-size:12px;color:${d.kpis.aovDeltaColor};display:flex;align-items:center;gap:4px;">${d.kpis.aovUp ? upArrow : ''}${d.kpis.aovDown ? downArrow : ''}${d.kpis.aovDeltaFmt} vs last period</span>` : ''}
+          </div>
+        </section>
+
+        ${d.selectedSegment ? `
+        <section class="blueprint" style="padding:var(--space-4);display:flex;align-items:center;gap:var(--space-6);">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <div>
+            <span class="card-kicker">Context focus</span>
+            <div style="font-family:var(--font-heading);font-size:18px;font-weight:600;">${esc(d.selectedSegment.label)}</div>
+          </div>
+          <div><div class="card-kicker">Purchase-likeness score</div><div style="font-size:18px;font-weight:600;">${d.segmentDetail.scoreFmt}</div></div>
+          <div><div class="card-kicker">Events (min. 20)</div><div style="font-size:18px;font-weight:600;">${d.segmentDetail.sizeFmt}</div></div>
+          <span style="margin-left:auto;font-size:11px;opacity:0.55;max-width:260px;">Score is the session-level model's purchase probability, inherited by each event from its session &mdash; a ranking signal, not a calibrated purchase rate.</span>
+        </section>` : ''}
+
+        <section class="blueprint" style="padding:var(--space-4);">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h5 style="margin:0 0 var(--space-3);">Funnel &amp; time-of-day</h5>
+          <div style="display:grid;grid-template-columns:280px 1fr;gap:var(--space-6);">
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              ${d.funnelStages.map(fs => `
+              <div style="display:flex;flex-direction:column;gap:4px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><span>${fs.name}</span><span style="font-weight:600;">${fs.valueFmt}</span></div>
+                <div style="height:20px;background:var(--color-neutral-200);position:relative;">
+                  <div style="height:100%;background:var(--color-accent);width:${fs.widthPct}%;"></div>
+                </div>
+              </div>`).join('')}
+              <div style="margin-top:6px;padding-top:10px;border-top:1px solid var(--color-divider);font-size:12px;">
+                <span style="opacity:0.65;">Cart &rarr; purchase rate</span>
+                <div style="font-family:var(--font-heading);font-size:20px;font-weight:600;color:var(--color-accent-700);">${d.kpis.cartToPurchaseFmt}</div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+                <span style="font-size:12px;opacity:0.65;">Purchase rate by hour (UTC)</span>
+                <span class="tag tag-accent">7&ndash;10am flagged</span>
+              </div>
+              <div style="height:220px;"><canvas id="hourly-canvas"></canvas></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="blueprint" style="padding:var(--space-4);">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <div style="display:flex;align-items:center;margin-bottom:var(--space-3);">
+            <h5 style="margin:0;">Category &amp; brand leaderboard</h5>
+            <div class="seg" style="margin-left:auto;">
+              <label class="seg-opt ${st.view === 'table' ? 'checked' : ''}"><input type="radio" name="view" data-action="view" data-value="table" ${st.view === 'table' ? 'checked' : ''}/>Table</label>
+              <label class="seg-opt ${st.view === 'chart' ? 'checked' : ''}"><input type="radio" name="view" data-action="view" data-value="chart" ${st.view === 'chart' ? 'checked' : ''}/>Chart</label>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><h6 style="margin:0;">Categories</h6><span style="font-size:11px;opacity:0.55;">avg conversion ${fmtPct(RAW.categoryAvgConversion)}</span></div>
+              ${st.view === 'table' ? `
+              <table class="table">
+                <thead><tr>
+                  <th style="cursor:pointer;" data-action="sortCat" data-key="name">Category</th>
+                  <th style="cursor:pointer;" data-action="sortCat" data-key="traffic">Traffic %</th>
+                  <th style="cursor:pointer;" data-action="sortCat" data-key="conversion">Conversion</th>
+                </tr></thead>
+                <tbody>
+                  ${d.catRows.map(cr => `
+                  <tr style="opacity:${cr.rowOpacity};background:${cr.rowBg};">
+                    <td>${esc(cr.name)}</td>
+                    <td>${cr.trafficFmt}</td>
+                    <td style="font-weight:600;color:${cr.mismatch};">${cr.conversionFmt}</td>
+                  </tr>`).join('')}
+                </tbody>
+              </table>` : `<div style="height:280px;"><canvas id="category-canvas"></canvas></div>`}
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><h6 style="margin:0;">Brands</h6><span style="font-size:11px;opacity:0.55;">share of purchases</span></div>
+              ${st.view === 'table' ? `
+              <table class="table">
+                <thead><tr>
+                  <th style="cursor:pointer;" data-action="sortBrand" data-key="name">Brand</th>
+                  <th style="cursor:pointer;" data-action="sortBrand" data-key="purchaseShare">Purchase share</th>
+                  <th style="cursor:pointer;" data-action="sortBrand" data-key="traffic">Traffic %</th>
+                  <th style="cursor:pointer;" data-action="sortBrand" data-key="conversion">Conversion</th>
+                </tr></thead>
+                <tbody>
+                  ${d.brandRows.map(br => `
+                  <tr style="opacity:${br.rowOpacity};background:${br.rowBg};">
+                    <td>${esc(br.name)}</td>
+                    <td>${br.shareFmt}</td>
+                    <td>${br.trafficFmt}</td>
+                    <td style="font-weight:600;color:${br.mismatch};">${br.conversionFmt}</td>
+                  </tr>`).join('')}
+                </tbody>
+              </table>` : `<div style="height:280px;"><canvas id="brand-canvas"></canvas></div>`}
+            </div>
+          </div>
+          <p style="margin:var(--space-3) 0 0;font-size:11px;opacity:0.55;">Red conversion values flag a high-traffic / low-conversion mismatch worth investigating.</p>
+        </section>
+
+        <section class="blueprint" style="padding:var(--space-4);">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h5 style="margin:0 0 var(--space-3);">Top converting contexts (Q5)</h5>
+          <div style="display:grid;grid-template-columns:1fr 320px;gap:var(--space-6);">
+            <div style="height:260px;"><canvas id="segment-canvas"></canvas></div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              ${d.segments.map(seg => `
+              <button data-action="segment" data-id="${seg.id}" style="all:unset;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:8px 10px;border:1px solid ${seg.borderColor};background:${seg.bg};">
+                <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;"><span>${esc(seg.label)}</span><span>${seg.scoreFmt}</span></div>
+                <span style="font-size:11px;opacity:0.6;">${seg.sizeFmt} events</span>
+              </button>`).join('')}
+            </div>
+          </div>
+        </section>
+
+        <section class="blueprint" style="padding:var(--space-4);">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h5 style="margin:0 0 var(--space-3);">Revenue &amp; price-band mix</h5>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);">
+            <div>
+              <span style="font-size:12px;opacity:0.65;">Daily revenue</span>
+              <div style="height:260px;margin-top:6px;"><canvas id="revenue-canvas"></canvas></div>
+            </div>
+            <div>
+              <span style="font-size:12px;opacity:0.65;">Purchase mix by price band</span>
+              <div style="height:260px;margin-top:6px;"><canvas id="price-canvas"></canvas></div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <footer style="padding:var(--space-4) var(--space-6);text-align:center;font-size:11px;opacity:0.5;">
+      Prototype / demo data &mdash; seeded from two historical months (Oct&ndash;Nov 2019); upload a raw event CSV above to preview the dashboard against your own export.
+    </footer>
+    `;
+
+    document.getElementById('app').innerHTML = html;
+    this.wireEvents();
+    this.buildCharts(d);
+  },
+
+  renderAndMount() {
+    this.render();
+  },
+
+  wireEvents() {
+    const root = document.getElementById('app');
+    const st = this.state;
+
+    root.querySelectorAll('input[data-action="month"]').forEach(el => {
+      el.addEventListener('change', () => this.setState({ month: el.dataset.value }));
+    });
+    const catSelect = root.querySelector('select[data-action="category"]');
+    if (catSelect) catSelect.addEventListener('change', e => this.setState({ category: e.target.value }));
+    const brandSelect = root.querySelector('select[data-action="brand"]');
+    if (brandSelect) brandSelect.addEventListener('change', e => this.setState({ brand: e.target.value }));
+
+    const dateStart = root.querySelector('input[data-action="dateStart"]');
+    if (dateStart) dateStart.addEventListener('change', e => this.setState({ dateStart: e.target.value || null }));
+    const dateEnd = root.querySelector('input[data-action="dateEnd"]');
+    if (dateEnd) dateEnd.addEventListener('change', e => this.setState({ dateEnd: e.target.value || null }));
+
+    const priceMin = root.querySelector('input[data-action="priceMin"]');
+    if (priceMin) priceMin.addEventListener('change', e => {
+      const v = Number(e.target.value);
+      const curMax = this.state.priceMax == null ? this.getPriceBounds()[1] : this.state.priceMax;
+      this.setState({ priceMin: Math.min(v, curMax) });
+    });
+    const priceMax = root.querySelector('input[data-action="priceMax"]');
+    if (priceMax) priceMax.addEventListener('change', e => {
+      const v = Number(e.target.value);
+      const curMin = this.state.priceMin == null ? this.getPriceBounds()[0] : this.state.priceMin;
+      this.setState({ priceMax: Math.max(v, curMin) });
+    });
+
+    const uploadInput = root.querySelector('input[data-action="upload"]');
+    if (uploadInput) uploadInput.addEventListener('change', e => this.handleFile(e));
+    const clearUploadBtn = root.querySelector('[data-action="clearUpload"]');
+    if (clearUploadBtn) clearUploadBtn.addEventListener('click', () => this.clearUpload());
+    const clearSegmentBtn = root.querySelector('[data-action="clearSegment"]');
+    if (clearSegmentBtn) clearSegmentBtn.addEventListener('click', () => this.setState({ segmentId: null }));
+    const resetBtn = root.querySelector('[data-action="resetFilters"]');
+    if (resetBtn) resetBtn.addEventListener('click', () => this.setState({ category: 'all', brand: 'all', segmentId: null, view: 'table', dateStart: null, dateEnd: null, priceMin: null, priceMax: null }));
+
+    root.querySelectorAll('input[data-action="view"]').forEach(el => {
+      el.addEventListener('change', () => this.setState({ view: el.dataset.value }));
+    });
+
+    root.querySelectorAll('[data-action="sortCat"]').forEach(el => {
+      el.addEventListener('click', () => {
+        const key = el.dataset.key;
+        const cur = this.state.catSort;
+        const dir = cur.key === key && cur.dir === 'desc' ? 'asc' : (key === 'name' ? 'asc' : 'desc');
+        this.setState({ catSort: { key, dir } });
+      });
+    });
+    root.querySelectorAll('[data-action="sortBrand"]').forEach(el => {
+      el.addEventListener('click', () => {
+        const key = el.dataset.key;
+        const cur = this.state.brandSort;
+        const dir = cur.key === key && cur.dir === 'desc' ? 'asc' : (key === 'name' ? 'asc' : 'desc');
+        this.setState({ brandSort: { key, dir } });
+      });
+    });
+
+    root.querySelectorAll('[data-action="segment"]').forEach(el => {
+      el.addEventListener('click', () => {
+        const id = Number(el.dataset.id);
+        this.setState({ segmentId: this.state.segmentId === id ? null : id });
+      });
+    });
+  },
+};
+
+// Boot
+if (window.Chart) {
+  App.render();
+} else {
+  // Chart.js CDN blocked/offline: still render the dashboard, charts will simply be skipped.
+  window.addEventListener('load', () => setTimeout(() => App.render(), 200));
+}
+</script>
+</body>
+</html>

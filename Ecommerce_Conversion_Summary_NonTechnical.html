@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can We Tell Which Shoppers Are About to Buy? — Findings Summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: oklch(98% 0.006 255); font-family: 'IBM Plex Sans', sans-serif; color: oklch(20% 0.02 255); }
+  a { color: oklch(40% 0.13 258); text-decoration: none; }
+  a:hover { color: oklch(68% 0.16 45); }
+  ::selection { background: oklch(40% 0.13 258); color: white; }
+</style>
+</head>
+<body>
+
+<div style="overflow-x:hidden;">
+
+  <!-- ============ HERO ============ -->
+  <section style="background:oklch(16% 0.055 258); color:oklch(97% 0.01 255); padding:clamp(56px,9vw,110px) clamp(20px,6vw,64px) clamp(64px,9vw,100px);">
+    <div style="max-width:920px; margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.1em; color:oklch(75% 0.1 55); margin-bottom:20px;">FINDINGS SUMMARY — FOR PRODUCT, CX &amp; MARKETING</div>
+      <h1 style="font-size:clamp(32px,5vw,52px); line-height:1.12; font-weight:700; margin:0 0 26px; max-width:18ch;">Can we tell which shoppers are about to buy?</h1>
+      <p style="font-size:clamp(17px,1.7vw,20px); line-height:1.7; max-width:66ch; color:oklch(89% 0.02 255); margin:0 0 16px;">
+        Short answer: <strong style="color:oklch(85% 0.12 55);">yes, well enough to act on.</strong> We looked at two months of real shopping activity to find out whether a shopper who puts something in their cart — but doesn't buy — can be spotted early and nudged toward finishing the purchase.
+      </p>
+      <p style="font-size:clamp(17px,1.7vw,20px); line-height:1.7; max-width:66ch; color:oklch(89% 0.02 255); margin:0 0 44px;">
+        This isn't a technical write-up — it's the plain-language version, built for Product, CX, and Marketing to act on directly.
+      </p>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1px; background:oklch(30% 0.05 258); border:1px solid oklch(30% 0.05 258); border-radius:2px; overflow:hidden;">
+        <div style="background:oklch(16% 0.055 258); padding:24px 20px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:clamp(26px,3.2vw,36px); font-weight:600; color:oklch(78% 0.13 55);">50.9<span style="font-size:0.55em;">%</span></div>
+          <div style="font-size:13px; color:oklch(72% 0.03 255); margin-top:6px;">of shoppers who cart something end up buying it</div>
+        </div>
+        <div style="background:oklch(16% 0.055 258); padding:24px 20px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:clamp(26px,3.2vw,36px); font-weight:600; color:oklch(78% 0.13 55);">1 in 5</div>
+          <div style="font-size:13px; color:oklch(72% 0.03 255); margin-top:6px;">abandoned carts look just as promising as a completed sale</div>
+        </div>
+        <div style="background:oklch(16% 0.055 258); padding:24px 20px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:clamp(26px,3.2vw,36px); font-weight:600; color:oklch(78% 0.13 55);">45.5<span style="font-size:0.55em;">%</span></div>
+          <div style="font-size:13px; color:oklch(72% 0.03 255); margin-top:6px;">of all purchases are smartphones — outsized for their traffic share</div>
+        </div>
+        <div style="background:oklch(16% 0.055 258); padding:24px 20px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:clamp(26px,3.2vw,36px); font-weight:600; color:oklch(78% 0.13 55);">2.4x</div>
+          <div style="font-size:13px; color:oklch(72% 0.03 255); margin-top:6px;">difference in buying activity between the slowest and busiest hour</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY THIS MATTERS ============ -->
+  <section style="padding:clamp(56px,8vw,90px) clamp(20px,6vw,64px); max-width:920px; margin:0 auto;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:0.1em; color:oklch(40% 0.13 258); margin-bottom:14px;">WHY THIS MATTERS</div>
+    <h2 style="font-size:clamp(24px,3.2vw,32px); font-weight:700; margin:0 0 20px;">A shopper who's already carted something has done most of the work</h2>
+    <p style="font-size:17px; line-height:1.7; max-width:70ch; color:oklch(30% 0.02 255); margin:0 0 16px;">Getting a brand-new visitor to the site costs money — ads, promotions, search placement. A shopper who's already put an item in their cart is a completely different situation: they've made most of the decision already. If we can tell which of those carts are worth a nudge — a reminder email, a discount, a retargeting ad — we can spend that effort where it actually pays off, instead of treating every abandoned cart the same.</p>
+    <p style="font-size:17px; line-height:1.7; max-width:70ch; color:oklch(30% 0.02 255);">That's the whole question this project set out to answer: <strong>given everything we know about how a shopper browsed, can we tell which carts are likely to convert — and which specific things about their behavior actually predict it?</strong></p>
+  </section>
+
+  <!-- ============ WHAT WE FOUND ============ -->
+  <section style="background:oklch(96% 0.008 255); padding:clamp(56px,8vw,90px) clamp(20px,6vw,64px);">
+    <div style="max-width:920px; margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:0.1em; color:oklch(40% 0.13 258); margin-bottom:14px;">WHAT WE FOUND</div>
+      <h2 style="font-size:clamp(24px,3.2vw,32px); font-weight:700; margin:0 0 32px;">Five things worth knowing</h2>
+
+      <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <div style="background:white; border:1px solid oklch(88% 0.012 255); border-radius:4px; padding:26px 28px;">
+          <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:10px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:oklch(40% 0.13 258); flex-shrink:0;">1</div>
+            <div style="font-size:19px; font-weight:600;">Most of the drop-off happens before checkout, not during it</div>
+          </div>
+          <p style="font-size:15.5px; line-height:1.65; color:oklch(30% 0.02 255); margin:0 0 0 36px;">Once someone adds an item to their cart, roughly 4 in 5 of them go on to buy it. The real opportunity isn't fixing checkout — it's getting more of the right people to add something to cart in the first place.</p>
+        </div>
+
+        <div style="background:white; border:1px solid oklch(88% 0.012 255); border-radius:4px; padding:26px 28px;">
+          <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:10px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:oklch(40% 0.13 258); flex-shrink:0;">2</div>
+            <div style="font-size:19px; font-weight:600;">We can tell which abandoned carts are worth a second chance</div>
+          </div>
+          <p style="font-size:15.5px; line-height:1.65; color:oklch(30% 0.02 255); margin:0 0 0 36px;">Of the 573,000 cart-containing visits in October, 50.9% converted. Looking closely at how someone shopped — not what they looked at, but <em>how</em> they browsed — we can meaningfully separate the likely buyers from the likely walk-aways. It's not perfect: about 1 in 5 "lost" carts look just as promising as a completed sale, so this is best used to prioritize follow-up, not as a certainty.</p>
+        </div>
+
+        <div style="background:white; border:1px solid oklch(88% 0.012 255); border-radius:4px; padding:26px 28px;">
+          <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:10px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:oklch(40% 0.13 258); flex-shrink:0;">3</div>
+            <div style="font-size:19px; font-weight:600;">"How much" someone shops matters more than "what" they shop for</div>
+          </div>
+          <p style="font-size:15.5px; line-height:1.65; color:oklch(30% 0.02 255); margin:0 0 0 36px;">Time spent browsing and number of items carted are, by far, the strongest signals that someone's about to buy. Even when we set those aside and look only at what a shopper browsed — how many pages, what price range, how many different brands — we still find a real, useful pattern. That's the more actionable version: you can't design a feature that makes someone "browse longer," but you can design one that makes brand comparison easier or highlights the right price range.</p>
+        </div>
+
+        <div style="background:white; border:1px solid oklch(88% 0.012 255); border-radius:4px; padding:26px 28px;">
+          <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:10px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:oklch(40% 0.13 258); flex-shrink:0;">4</div>
+            <div style="font-size:19px; font-weight:600;">Timing beats the day of the week</div>
+          </div>
+          <p style="font-size:15.5px; line-height:1.65; color:oklch(30% 0.02 255); margin:0 0 0 36px;">Buying activity swings 2.4x across the day — from a low around midnight UTC to a peak around 9am UTC. Day of the week barely matters by comparison (Monday's the best day, Tuesday the worst, and the gap between them is small). If Marketing is choosing when to send a promotion, the hour matters more than the day.</p>
+        </div>
+
+        <div style="background:white; border:1px solid oklch(88% 0.012 255); border-radius:4px; padding:26px 28px;">
+          <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:10px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:oklch(40% 0.13 258); flex-shrink:0;">5</div>
+            <div style="font-size:19px; font-weight:600;">Black Friday brought the crowds, not the biggest sales day</div>
+          </div>
+          <p style="font-size:15.5px; line-height:1.65; color:oklch(30% 0.02 255); margin:0 0 0 36px;">Purchase volume clearly spiked on Black Friday, as expected. But the single highest-<em>revenue</em> day of November was actually 12 days earlier. Worth knowing before assuming Black Friday is automatically the day to plan the biggest push around.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW WE KNOW THIS HOLDS UP ============ -->
+  <section style="padding:clamp(56px,8vw,90px) clamp(20px,6vw,64px); max-width:920px; margin:0 auto;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:0.1em; color:oklch(40% 0.13 258); margin-bottom:14px;">HOW WE KNOW THIS HOLDS UP</div>
+    <h2 style="font-size:clamp(24px,3.2vw,32px); font-weight:700; margin:0 0 20px;">We didn't just check October — we tested it against a second, harder month</h2>
+    <p style="font-size:17px; line-height:1.7; max-width:70ch; color:oklch(30% 0.02 255); margin:0 0 16px;">Everything above was found by looking at October. Before trusting any of it, we checked whether the same patterns held true in November — a busier, more promotional month that includes Black Friday. They did: the tool that spots likely buyers worked just as well, if not slightly better, on a month it had never seen before.</p>
+    <p style="font-size:17px; line-height:1.7; max-width:70ch; color:oklch(30% 0.02 255);">One honest caveat: overall buying activity was a bit lower in November than October, and cart-to-purchase conversion specifically dropped noticeably during that busier month. That's a useful signal on its own — a shopper's cart means slightly less during a big promotional push than on a typical day, worth factoring into planning rather than assuming the numbers above hold identically year-round.</p>
+  </section>
+
+  <!-- ============ WHAT TO DO ============ -->
+  <section style="background:oklch(16% 0.055 258); color:oklch(97% 0.01 255); padding:clamp(56px,8vw,90px) clamp(20px,6vw,64px);">
+    <div style="max-width:920px; margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:0.1em; color:oklch(75% 0.1 55); margin-bottom:14px;">WHAT TO DO NEXT</div>
+      <h2 style="font-size:clamp(24px,3.2vw,32px); font-weight:700; margin:0 0 32px; color:white;">Recommendations, by team</h2>
+
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:oklch(20% 0.045 258); border:1px solid oklch(30% 0.05 258); border-radius:4px; padding:24px 26px; display:flex; gap:20px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; letter-spacing:0.05em; color:oklch(16% 0.055 258); background:oklch(78% 0.13 55); border-radius:2px; padding:5px 10px; height:fit-content; flex-shrink:0; white-space:nowrap;">MARKETING</div>
+          <div style="font-size:15.5px; line-height:1.65; color:oklch(90% 0.015 255);">Use the "likely to buy" signal to prioritize who gets a cart-reminder email or retargeting ad first — don't treat every abandoned cart the same. Time promotional sends around the 7&ndash;10am UTC window rather than optimizing by day of week.</div>
+        </div>
+        <div style="background:oklch(20% 0.045 258); border:1px solid oklch(30% 0.05 258); border-radius:4px; padding:24px 26px; display:flex; gap:20px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; letter-spacing:0.05em; color:oklch(16% 0.055 258); background:oklch(78% 0.13 55); border-radius:2px; padding:5px 10px; height:fit-content; flex-shrink:0; white-space:nowrap;">PRODUCT</div>
+          <div style="font-size:15.5px; line-height:1.65; color:oklch(90% 0.015 255);">Focus on getting more of the right shoppers to add something to cart in the first place — that's where the real upside is, not checkout. Make brand comparison and price browsing easier, since those are the specific things (besides time spent) that predict a sale.</div>
+        </div>
+        <div style="background:oklch(20% 0.045 258); border:1px solid oklch(30% 0.05 258); border-radius:4px; padding:24px 26px; display:flex; gap:20px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; letter-spacing:0.05em; color:oklch(16% 0.055 258); background:oklch(78% 0.13 55); border-radius:2px; padding:5px 10px; height:fit-content; flex-shrink:0; white-space:nowrap;">CUSTOMER EXPERIENCE</div>
+          <div style="font-size:15.5px; line-height:1.65; color:oklch(90% 0.015 255);">Checkout itself is already working well — 4 in 5 carted items get bought. Put friction-reduction effort further upstream, in discovery and browsing, not the payment flow.</div>
+        </div>
+        <div style="background:oklch(20% 0.045 258); border:1px solid oklch(30% 0.05 258); border-radius:4px; padding:24px 26px; display:flex; gap:20px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; letter-spacing:0.05em; color:oklch(16% 0.055 258); background:oklch(78% 0.13 55); border-radius:2px; padding:5px 10px; height:fit-content; flex-shrink:0; white-space:nowrap;">LEADERSHIP</div>
+          <div style="font-size:15.5px; line-height:1.65; color:oklch(90% 0.015 255);">Don't plan around Black Friday as automatically the biggest revenue day — check the data each year. And treat "carts convert less during big promotions" as a real, recurring pattern to plan for, not a one-off.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="padding:36px clamp(20px,6vw,64px); text-align:center;">
+    <div style="font-size:13px; color:oklch(48% 0.02 255); max-width:70ch; margin:0 auto 10px;">This is the plain-language summary. A detailed technical write-up (methodology, model performance, full data breakdown) is available for anyone who wants to go deeper.</div>
+    <div style="font-size:12px; color:oklch(60% 0.02 255);">E-Commerce Conversion Analysis · Findings Summary for Non-Technical Stakeholders</div>
+  </footer>
+
+</div>
+</body>
+</html>
